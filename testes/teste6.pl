@@ -16,3 +16,27 @@ adj(g,h). adj(h,g).
 adj(h,f). adj(f,h).
 adj(h,e). adj(e,h).
 adj(e,f). adj(f,e).
+
+possui_ciclo :- adj(X,Y), busca(Y, X, [X, Y]).
+
+busca(Atual, Final, Passados) :-
+    adj(Atual, Final),
+    length(Passados, Tamanho),
+    Tamanho >= 3.
+
+busca(Atual, Final, Passados) :-
+    adj(Atual, Proximo),
+    \+ member(Proximo, Passados),
+    busca(Proximo, Final, [Proximo | Passados]).
+
+mostrar_ciclo(Ciclo) :- adj(X,Y), busca_ciclo(Y, X, [Y, X], CicloOrganizado), reverse(CicloOrganizado, Ciclo).
+
+busca_ciclo(Atual, Final, Passados, [Final | Passados]) :-
+    adj(Atual, Final),
+    length(Passados, Tamanho),
+    Tamanho >= 3.
+
+busca_ciclo(Atual, Final, Passados, CicloFinal) :-
+    adj(Atual, Proximo),
+    \+ member(Proximo, Passados),
+    busca_ciclo(Proximo, Final, [Proximo | Passados], CicloFinal).
